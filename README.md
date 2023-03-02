@@ -1,6 +1,19 @@
 # uw_cet522_project
 
-### project ouline:
+## What this repository should do:
+
+### 1
+#### Working on database construction from raw files
+
+### 2
+#### importing metadata from database
+#### running streamlit and getting user input
+#### connecting to backend
+#### finding the required datasets and fetch them from the database
+#### running the backend alogrithms and produce results
+#### returning results to streamlit
+
+## project ouline:
 - folder: data
 - folder: outputs
 - a folder or .py file: for data cleaning/ database construction/ data query
