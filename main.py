@@ -1,8 +1,3 @@
-import logic
-import database
-import application
-
-
 # run application
 
 
@@ -19,3 +14,15 @@ req_code = 1
 route = 'I5'
 
 # respond to the application
+
+def analyze_command(input_list):
+
+    return None
+
+if __name__ == '__main__':
+    app = Application()
+    app.run()
+    while True:
+        app_inputs = app.get_input()
+        output = analyze_command(app_inputs)
+        app.show_result(output)
