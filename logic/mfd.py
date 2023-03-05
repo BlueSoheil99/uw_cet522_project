@@ -1,13 +1,13 @@
-import pandas as pd
-import data_handler.fetch_data as fetch_data
+import data_handler.data_query as data_query
 
 
 def make_MFD(route, mile_start, mile_end, Week_of_the_year):
-    data = fetch_data.abc()
+    data = data_query.get_data()
     # process data
     plot = 'a plot you just made!'
     return plot
 
 
-make_MFD('I5', 0, 190)
+if __name__ == '__main__':
+    make_MFD('I5', 0, 190)
 
