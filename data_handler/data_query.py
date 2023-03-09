@@ -3,10 +3,10 @@ import pandas as pd
 from . import meta_creator
 
 
-def _read_meta(adr='../data/metadata.xlsx'):
-    metadata = pd.read_excel(adr)
-    metadata.set_index(metadata.columns[0], inplace=True)
-    return metadata
+# def _read_meta(adr='../data/metadata.xlsx'):
+#     metadata = pd.read_excel(adr)
+#     metadata.set_index(metadata.columns[0], inplace=True)
+#     return metadata
 
 
 def _select_files(route, direction, daily_average=True, weekend=False, start_date='2016-01-01', end_date='2016-12-31'):
@@ -65,15 +65,29 @@ def get_data(route, direction, mileposts=None, daily_average=True, weekend=False
 
     file_metas = _select_files(route, direction, daily_average, weekend)
     for idx, meta in file_metas.iterrows():
-        # todo if the file was read bfore, then do not read it fully again
-        dataframes.append(_read_whole_excel(meta.file_adr, sheet_names))
-        files_dates.append((meta.start_date, meta.end_date))
+        # dataframes.append(_read_whole_excel(meta.file_adr, sheet_names))
+        # files_dates.append((meta.start_date, meta.end_date))
+        # # instead of two lines above, we save the files we read in RAM and when they are needed again, we'll use
+        # # previously opened files, instead of reading those files again
+        address = meta.file_adr
+        if address in opened_DFs.keys():
+            dfs, dates = opened_DFs[address][0], opened_DFs[address][1]
+            dataframes.append(dfs)
+            files_dates.append(dates)
+            print(f'retrieved file: {address}')
+        else:
+            dfs = _read_whole_excel(meta.file_adr, sheet_names)
+            dates = (meta.start_date, meta.end_date)
+            dataframes.append(dfs)
+            files_dates.append(dates)
+            opened_DFs[address] = [dfs, dates]
     DFs_for_mileposts = _extract_mileposts(dataframes, column_names, mileposts, files_dates)
     return DFs_for_mileposts
 
 
 print('query.py dir: ' +os.getcwd())
 metadata = meta_creator.create_meta()
+opened_DFs = {}
 
 if __name__ == '__main__':
     # print(os.getcwd())
