@@ -3,12 +3,6 @@ import pandas as pd
 from . import meta_creator
 
 
-# def _read_meta(adr='../data/metadata.xlsx'):
-#     metadata = pd.read_excel(adr)
-#     metadata.set_index(metadata.columns[0], inplace=True)
-#     return metadata
-
-
 def _select_files(route, direction, daily_average=True, weekend=False, start_date='2016-01-01', end_date='2016-12-31'):
     df = metadata[metadata.route == route]
     df = df[df.weekend == weekend]
@@ -92,7 +86,7 @@ def get_data(route, direction, mileposts=None, daily_average=True, weekend=False
 
 
 print('query.py dir: ' + os.getcwd())
-metadata = meta_creator.create_meta()
+metadata = meta_creator.get_meta()
 opened_DFs = {}
 
 if __name__ == '__main__':

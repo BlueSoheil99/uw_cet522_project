@@ -1,11 +1,8 @@
+import data_handler.meta_creator
 import logic.fd
 import logic.mfd
 import os
 import matplotlib.pyplot as plt
-
-
-req_code = 1
-route = 'I5'
 
 
 def analyze_command(input_list):
@@ -13,8 +10,12 @@ def analyze_command(input_list):
 
 
 if __name__ == '__main__':
+    mileposts_list = data_handler.meta_creator.get_mileposts()
+
     print('main dir: '+os.getcwd())
     ax = logic.mfd.make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
+    plt.show()
+    ax = logic.fd.make_FD('I5', 'Increasing', milepost=168.85)
     plt.show()
     # app = Application()
     # app.run()\

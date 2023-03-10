@@ -30,7 +30,7 @@ def _get_metadata(file_name):
     return route, direction, mile_start, mile_end, weekend, start, end
 
 
-def create_meta(glob_address='./data/DriveNet/*/*.xlsx'):
+def _create_meta(glob_address='./data/DriveNet/*/*.xlsx'):
     print('metacreator dir: '+os.getcwd())
     file_names = sorted(glob.glob(glob_address))
 
@@ -60,6 +60,29 @@ def create_meta(glob_address='./data/DriveNet/*/*.xlsx'):
 
     metadata = pd.DataFrame(data=info)
     return metadata
+
+
+def _extract_list_of_mileposts():
+    n = len(metadata)
+    file_number = random.randint(0, n-1)
+    x = metadata.file_adr[file_number]
+    df = pd.read_excel(x)
+    mileposts = list(df.columns[1:])
+    print(f'*** Mileposts are extracted from mileposts of file: {x}\n')
+    return mileposts
+
+
+def get_meta():
+    return metadata
+
+
+def get_mileposts():
+    return mileposts
+
+
+metadata = _create_meta()
+mileposts = _extract_list_of_mileposts()
+
 
 
 if __name__ == '__main__':
