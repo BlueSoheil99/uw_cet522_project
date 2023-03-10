@@ -75,7 +75,7 @@ def get_data(route, direction, mileposts=None, daily_average=True, weekend=False
         # files_dates.append((meta.start_date, meta.end_date))
         # # instead of two lines above, we save the files we read in RAM and when they are needed again, we'll use
         # # previously opened files, instead of reading those files again
-        address = meta.file_adr
+        address = meta.file_adr  #meta is a row of meta table
         if address in opened_DFs.keys():
             dfs, dates = opened_DFs[address][0], opened_DFs[address][1]
             dataframes.append(dfs)

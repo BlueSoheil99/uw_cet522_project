@@ -1,4 +1,5 @@
 import logic.fd
+import logic.mfd
 import os
 import matplotlib.pyplot as plt
 
@@ -13,7 +14,7 @@ def analyze_command(input_list):
 
 if __name__ == '__main__':
     print('main dir: '+os.getcwd())
-    ax = logic.fd.make_FD('I5', 'Increasing', milepost=168.85)
+    ax = logic.mfd.make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
     plt.show()
     # app = Application()
     # app.run()\
