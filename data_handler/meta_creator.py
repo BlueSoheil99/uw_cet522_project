@@ -63,10 +63,13 @@ def _create_meta(glob_address='./data/DriveNet/*/*.xlsx'):
     return metadata
 
 
-def _extract_list_of_mileposts():
-    n = len(metadata)
+def extract_list_of_mileposts(route_name, direction):
+    df = metadata[metadata.route == route_name]
+    df = df[df.direction == direction]
+    df.reset_index(drop=True, inplace=True)
+    n = len(df)
     file_number = random.randint(0, n-1)
-    x = metadata.file_adr[file_number]
+    x = df.file_adr[file_number]
     df = pd.read_excel(x)
     mileposts = list(df.columns[1:])
     print(f'*** Mileposts are extracted from mileposts of file: {x}\n')
@@ -77,13 +80,7 @@ def get_meta():
     return metadata
 
 
-def get_mileposts():
-    return mileposts
-
-
 metadata = _create_meta()
-mileposts = _extract_list_of_mileposts()
-
 
 
 if __name__ == '__main__':
