@@ -22,17 +22,23 @@ def _select_files(route, direction, daily_average=True, weekend=False, start_dat
     return df
 
 
-def _extract_mileposts(dataframes, column_names, mileposts, periods):
+def _extract_mileposts(dataframes, column_names, mileposts, periods, daily_average=True):
+    # in case column_names are : ['time', 'start_date', 'end_date', 'speed', 'Volume (5-mins all lanes)']
     template = {col: [] for col in column_names}
-    template[column_names[0]] = list(dataframes[0][0].iloc[:, 0])*len(dataframes)
-    start, end = [], []
-    for i in range(len(dataframes)):
-        a = [periods[i][0]] * 288
-        b = [periods[i][1]] * 288
-        start.extend(a)
-        end.extend(b)
-    template[column_names[1]] = start
-    template[column_names[2]] = end
+    original_first_column = dataframes[0][0].iloc[:, 0]  # todo convert it to datetime dtype
+    # for average daily files it's just time, for daily files, it's date and time
+    if daily_average:
+        template[column_names[0]] = list(original_first_column)*len(dataframes)
+        # if we use daily data, we need another way to insert dates
+        start, end = [], []
+        for i in range(len(dataframes)):
+            a = [periods[i][0]] * 288  # =24*12
+            b = [periods[i][1]] * 288
+            start.extend(a)
+            end.extend(b)
+        template[column_names[1]] = start
+        template[column_names[2]] = end
+    # else: # todo what if we want to use daily data instead of average data?
     DFs = [template] * len(mileposts)
 
     for sheets in dataframes:
@@ -85,7 +91,7 @@ def get_data(route, direction, mileposts=None, daily_average=True, weekend=False
     return DFs_for_mileposts
 
 
-print('query.py dir: ' +os.getcwd())
+print('query.py dir: ' + os.getcwd())
 metadata = meta_creator.create_meta()
 opened_DFs = {}
 
