@@ -1,26 +1,30 @@
-import data_handler.meta_creator
-import logic.fd
-import logic.mfd
+from data_handler import meta_creator
+from logic import fd, mfd
 import os
 import matplotlib.pyplot as plt
+# from user_interface import Application
 
 
-def analyze_command(input_list):
+def analyze_command(command, route, direction, milepost, start_d, end_d):
+    if command == 'MFD':
+        # return logic.mfd.make_MFD(route, direction, milepost=milepost, start_d, end_d)
+        return mfd.make_MFD(route, direction, milepost=milepost)
+    elif command == 'FD':
+        # return logic.fd.make_FD(route, direction, milepost, start_d, end_d)
+        return fd.make_FD(route, direction, milepost)
 
-    return None
+
+def get_mileposts(route, direction):
+    return meta_creator.extract_list_of_mileposts(route, direction)
 
 
 if __name__ == '__main__':
-    mileposts_list = data_handler.meta_creator.extract_list_of_mileposts('I5', 'Increasing')
-    # test.run()
+    # mileposts_list = meta_creator.extract_list_of_mileposts('I5', 'Increasing')
     print('main dir: '+os.getcwd())
-    ax = logic.mfd.make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
-    plt.show()
-    ax = logic.fd.make_FD('I5', 'Increasing', milepost=168.85)
-    plt.show()
-    # # app = Application()
-    # app.run()\
-    # while True:
-    #     app_inputs = app.get_input()
-    #     output = analyze_command(app_inputs)
-    #     app.show_result(output)
+    # ax = logic.mfd.make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
+    # plt.show()
+    # ax = logic.fd.make_FD('I5', 'Increasing', milepost=168.85)
+    # plt.show()]
+    # app = Application()
+    # while app.isRunning():
+    #     input = app.run()
