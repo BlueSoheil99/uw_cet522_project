@@ -10,7 +10,7 @@ def make_FD(route, direction, milepost, start_date='2016-01-01', end_date='2016-
 
 
     fig, axs = plt.subplots(2, 2)
-    fig.tight_layout(pad=2.0)
+    fig.tight_layout(pad=2.5)
 
     ax1 = sns.scatterplot(data=data, x='density', y='volume', ax=axs[0,0],
                          alpha=0.2, marker='.')
