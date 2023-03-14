@@ -20,7 +20,7 @@ def make_MFD (route, direction, milepost):
     datamfd=datamfd/(len(milepost))
 
     fig, axs = plt.subplots(2, 2)
-    fig.tight_layout(pad=1.0)
+    fig.tight_layout(pad=2.0)
 
     ax1 = sns.scatterplot(data=datamfd, x='density', y='volume', ax=axs[0,0],
                          alpha=0.2, marker='.')
