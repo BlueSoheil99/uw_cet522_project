@@ -4,10 +4,11 @@ import seaborn as sns
 from data_handler.data_query import get_data
 
 
-def make_MFD (route, direction, milepost):
+def make_MFD (route, direction, milepost, daily_average, weekend, start_date, end_date, start_time, end_time):
     datamfd = pd.DataFrame()
     for i in range(len(milepost)):
-        data = get_data(route, direction, [milepost[i]])[0]
+        data = get_data(route, direction, [milepost], daily_average=daily_average, weekend=weekend,
+                        start_date=start_date, end_date=end_date, start_time=start_time, end_time=end_time)[0]
         data['volume'] = data['Volume (5-mins all lanes)'] * 12
         data['density'] = data.volume / data.speed
         data['speed'] = data.speed
@@ -22,24 +23,17 @@ def make_MFD (route, direction, milepost):
     fig, axs = plt.subplots(2, 2)
     fig.tight_layout(pad=2.5)
 
-    ax1 = sns.scatterplot(data=datamfd, x='density', y='volume', ax=axs[0,0],
+    ax1 = sns.scatterplot(data=datamfd, x='density', y='volume', ax=axs[0, 0],
                          alpha=0.2, marker='.')
-    ax2 = sns.scatterplot(data=datamfd, x='density', y='speed', ax=axs[1,0],
+    ax2 = sns.scatterplot(data=datamfd, x='density', y='speed', ax=axs[1, 0],
                          alpha=0.2, marker='.')
-    ax3 = sns.scatterplot(data=datamfd, x='volume', y='speed', ax=axs[1,1],
+    ax3 = sns.scatterplot(data=datamfd, x='volume', y='speed', ax=axs[1, 1],
                          alpha=0.2, marker='.')
     axs[0,1].remove()
     plt.suptitle(f'MFD for {route} in {direction} direction, '
                     f'milepost {milepost[0]} to {milepost[-1]}')
-
-
-    # fig.suptitle('MfD plots')
-    # axs[0, 0].plot(ax)  # fk
-    # axs[1, 0].plot(ax)  # vk
-    # axs[1, 1].plot(ax)  # vf
-
     return axs
 
-if __name__ == '__main__':
-    make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
+# if __name__ == '__main__':
+#     make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
 
