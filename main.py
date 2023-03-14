@@ -21,8 +21,8 @@ def get_mileposts(route, direction):
 if __name__ == '__main__':
     # mileposts_list = meta_creator.extract_list_of_mileposts('I5', 'Increasing')
     print('main dir: '+os.getcwd())
-    # ax = logic.mfd.make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
-    # plt.show()
+    ax = mfd.make_MFD('I5', 'Increasing', milepost=[168.85, 170.25])
+    plt.show()
     # ax = logic.fd.make_FD('I5', 'Increasing', milepost=168.85)
     # plt.show()]
     # app = Application()
