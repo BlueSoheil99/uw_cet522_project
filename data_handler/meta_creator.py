@@ -31,7 +31,7 @@ def _get_metadata(file_name):
     return route, direction, mile_start, mile_end, weekend, start, end
 
 
-def _create_meta(glob_address='./data/DriveNet/*/*.xlsx'):
+def _create_meta(glob_address='.\\data\\DriveNet\\*\\*.xlsx'):
     print('metacreator dir: '+os.getcwd())
     file_names = sorted(glob.glob(glob_address))
 
@@ -40,7 +40,7 @@ def _create_meta(glob_address='./data/DriveNet/*/*.xlsx'):
     # for i, name in enumerate(file_names):
     for name in file_names:
         org_name = name
-        name = name.split('/')
+        name = name.split('\\')
         pre_name = name[:-1]
         name = name[-1][:-5]  # remove '.xlsx' part
         route, direction, mile_start, mile_end, weekend, start, end = _get_metadata(name)
@@ -68,7 +68,8 @@ def extract_list_of_mileposts(route_name, direction):
     df = df[df.direction == direction]
     df.reset_index(drop=True, inplace=True)
     n = len(df)
-    file_number = random.randint(0, n-1)
+    file_number = 0
+    # file_number = random.randint(0, n-1)
     x = df.file_adr[file_number]
     df = pd.read_excel(x)
     mileposts = list(df.columns[1:])
@@ -84,7 +85,7 @@ metadata = _create_meta()
 
 
 if __name__ == '__main__':
-    file_names = sorted(glob.glob('./data/DriveNet/*/*.xlsx'))
+    file_names = sorted(glob.glob('.\\data\\DriveNet\\*\\*.xlsx'))
 
     info = {'file_adr': [], 'type': [], 'route': [], 'mile_start': [], 'mile_end': [],
             'weekend': [], 'direction': [], 'start_date': [], 'end_date': []}
@@ -92,7 +93,7 @@ if __name__ == '__main__':
     # for i, name in enumerate(file_names):
     for name in file_names:
         org_name = name
-        name = name.split('/')
+        name = name.split('\\')
         pre_name = name[:-1]
         name = name[-1][:-5]  # remove '.xlsx' part
         route, direction, mile_start, mile_end, weekend, start, end = _get_metadata(name)
@@ -114,4 +115,4 @@ if __name__ == '__main__':
     metadata = pd.DataFrame(data=info)
     # metadata.start_date = pd.to_datetime(metadata.start_date)
     # metadata.end_date = pd.to_datetime(metadata.end_date)
-    metadata.to_excel('./data/metadata.xlsx')
+    metadata.to_excel('.\\data\\metadata.xlsx')
