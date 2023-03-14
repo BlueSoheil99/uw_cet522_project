@@ -2,12 +2,12 @@ import os
 import pandas as pd
 import numpy as np
 from . import meta_creator
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 START_DATE_DEFAULT = date(2016, 1, 1)
 END_DATE_DEFAULT = date(2016, 12, 31)
-START_TIME_DEFAULT = '00:00'
-END_TIME_DEFAULT = '23:59'
+START_TIME_DEFAULT = time(0, 0, 0)
+END_TIME_DEFAULT = time(23, 55, 0)
 
 
 def _filter_date_months(dataframe, column_names, dates):
@@ -19,6 +19,18 @@ def _filter_date_months(dataframe, column_names, dates):
     first = np.argwhere(np.array(x))[0][0]
     second = np.argwhere(np.array(y))[-1][0]
     return dataframe.iloc[first:second+1, :]
+
+
+def _filter_date_time(milepost_DFs, column_names, start_date, end_date, start_time, end_time, daily_average):
+    start_date_cname, end_date_cname, time_cname = column_names[1], column_names[2], column_names[0]
+    for i, df in enumerate(milepost_DFs):
+        df = df[start_time <= df[time_cname]]
+        df = df[df[time_cname] <= end_time]
+        if not daily_average:
+            df = df[df[start_date_cname] >= start_date]
+            df = df[df[end_date_cname] <= end_date]
+        milepost_DFs[i] = df
+    return milepost_DFs
 
 
 def _select_files(route, direction, daily_average, weekend, start_date, end_date):
@@ -37,12 +49,12 @@ def _select_files(route, direction, daily_average, weekend, start_date, end_date
 def _extract_mileposts(dataframes, column_names, mileposts, periods, daily_average):
     # in case column_names are : ['time', 'start_date', 'end_date', 'speed', 'Volume (5-mins all lanes)']
     template = {col: [] for col in column_names}
-    original_first_column = dataframes[0][0].iloc[:, 0]
-    # for average daily files it's just time, for daily files, it's date and time
+    # for average daily files the first columns are just time, for daily files, it's date and time
 
     if daily_average:
-        original_first_column = original_first_column.apply(lambda t: datetime.strptime(t, '%H:%M').time())
-        template[column_names[0]] = list(original_first_column)*len(dataframes)
+        times = dataframes[0][0].iloc[:, 0]
+        times = times.apply(lambda t: datetime.strptime(t, '%H:%M').time())
+        template[column_names[0]] = list(times)*len(dataframes)
         # if we use daily data, we need another way to insert dates
         start, end = [], []
         for i in range(len(dataframes)):
@@ -53,10 +65,13 @@ def _extract_mileposts(dataframes, column_names, mileposts, periods, daily_avera
         template[column_names[1]] = start
         template[column_names[2]] = end
     else:
-        original_first_column = original_first_column.apply(lambda dt: datetime.strptime(dt, '%Y-%m-%d %H:%M:%S'))
-        template[column_names[0]] = original_first_column.apply(lambda dt: dt.time())
-        template[column_names[1]] = original_first_column.apply(lambda dt: dt.date())
-        template[column_names[2]] = template[column_names[1]]
+        for i in range(len(dataframes)):
+            DTs = dataframes[i][0].iloc[:, 0]
+            DTs = DTs.apply(lambda dt: datetime.strptime(dt, '%Y-%m-%d %H:%M:%S'))
+            template[column_names[0]].extend(DTs.apply(lambda dt: dt.time()))
+            dates = DTs.apply(lambda dt: dt.date())
+            template[column_names[1]].extend(dates)
+            template[column_names[2]].extend(dates)
 
     DFs = [template] * len(mileposts)
     for sheets in dataframes:
@@ -101,13 +116,11 @@ def get_data(route, direction, mileposts=None, daily_average=True, weekend=False
             dfs = _read_whole_excel(meta.file_adr, sheet_names)
             dates = (meta.start_date, meta.end_date)
             opened_DFs[address] = [dfs, dates]
-
         dataframes.append(dfs)
         files_dates.append(dates)
-
     DFs_for_mileposts = _extract_mileposts(dataframes, column_names, mileposts, files_dates, daily_average)
-    # todo filter dates
-    # todo fiter time
+    DFs_for_mileposts = _filter_date_time(DFs_for_mileposts,  column_names[:3], start_date, end_date,
+                                          start_time, end_time, daily_average)
     return DFs_for_mileposts
 
 
@@ -115,6 +128,6 @@ print('query.py dir: ' + os.getcwd())
 metadata = meta_creator.get_meta()
 opened_DFs = {}
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # print(os.getcwd())
-    data = get_data('I5', 'Increasing', mileposts=[168.85], daily_average=True, weekend=False)
+    # data = get_data('I5', 'Increasing', mileposts=[168.85], daily_average=True, weekend=False)
