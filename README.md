@@ -1,25 +1,19 @@
 # uw_cet522_project
 
-## What this repository should do:
+## A Fundamental Diagram (FD) and Macroscopic Fundamental Diagram (MFD) illustration app for Seattle highways
 
-### 1
-#### Working on database construction from raw files
+Soheil Keshavarz (BlueSoheil99), Shakiba Naderian (Shakiba97), Mohammad Mehdi Oshanreh (mohammadm3gtr)
 
-### 2
-#### importing metadata from database
-#### running streamlit and getting user input
-#### connecting to backend
-#### finding the required datasets and fetch them from the database
-#### running the backend alogrithms and produce results
-#### returning results to streamlit
+The Fundamental diagram illustrates the relationship between traffic flow variables for small segments of a road network. On the other hand, Macroscopic fundamental diagrams (MFD) are an aggregation of these variables at different times and days, independent of demand and time, and provide a powerful tool for understanding traffic flow patterns in specific aggregated parts of the network. In this study, we explored the possibility of observing a low-scatter relationship between various traffic attributes at a large scale (MFD) on one of Seattle's highways, I5, using loop detector data and comparing it to the microscopic level (FD). The results indicate that aggregating the data for multiple mileposts results in a diagram with a much lower scatter. Additionally, the study aims to create an application using the Streamlit library in python that can generate plots of FDs for selected segments and MFDs for a range of segments on the I5 highway. 
 
-## project ouline:
-- folder: data
-- folder: outputs
-- a folder or .py file: for data cleaning/ database construction/ data query
-- a folder or .py file: for working with data and creating results
-- a folder or .py file: for user interface (streamlit)
-- python file: database_constructor.py
-  - it is used before running main to work on sql design
-- python file: main.py
-  - main.py connects graphic, logic, and data query parts
+## This repository consists of three modules:
+
+#### 1 - A data_handler module to extract requested information for a list of mileposts on a specified route, direction, time, and date 
+
+#### 2 - A logic module that fetches data from the first module to construct FD and MFD
+
+#### 3- A streamlit interface coded in main.py to interact with a user 
+
+## How to run the project?
+ * make sure that GLOB_ADDRESS and SPLITTER in meta_query.py are compatible with you OS
+ * run main.py and read the warning at the end and do as instruction says!
